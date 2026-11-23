@@ -1,0 +1,6 @@
+apiVersion: 1
+providers:
+  - name: Fleet
+    folder: Robot Fleet
+    type: file
+    options: {path: /etc/grafana/provisioning/dashboards}

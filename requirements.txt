@@ -1,0 +1,7 @@
+numpy>=1.24,<3
+gymnasium[mujoco]>=1.0,<2
+torch>=2.2
+pyarrow>=15
+pytest>=8
+prometheus-client>=0.20
+PyYAML>=6

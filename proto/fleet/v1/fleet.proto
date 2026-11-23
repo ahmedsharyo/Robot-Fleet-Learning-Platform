@@ -1,0 +1,28 @@
+syntax = "proto3";
+package fleet.v1;
+option go_package = "github.com/example/robot-fleet-learning-platform/orchestrator/gen/fleet/v1;fleetv1";
+
+service Fleet {
+  rpc RegisterWorker(RegisterWorkerRequest) returns (RegisterWorkerResponse);
+  rpc SendHeartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+  rpc RequestJob(RequestJobRequest) returns (Job);
+  rpc StartJob(JobLease) returns (JobStatus);
+  rpc CompleteJob(CompleteJobRequest) returns (JobStatus);
+  rpc FailJob(FailJobRequest) returns (JobStatus);
+  rpc RenewLease(JobLease) returns (JobStatus);
+  rpc CancelJob(CancelJobRequest) returns (JobStatus);
+  rpc GetJobStatus(GetJobStatusRequest) returns (JobStatus);
+}
+message RegisterWorkerRequest { string worker_id = 1; repeated string capabilities = 2; int32 cpu_millis = 3; int64 memory_bytes = 4; }
+message RegisterWorkerResponse { string worker_id = 1; int32 heartbeat_interval_seconds = 2; }
+message HeartbeatRequest { string worker_id = 1; int32 cpu_millis_free = 2; int64 memory_bytes_free = 3; }
+message HeartbeatResponse { bool accepted = 1; }
+message RequestJobRequest { string worker_id = 1; repeated string capabilities = 2; int32 cpu_millis_free = 3; int64 memory_bytes_free = 4; }
+message Job { string job_id = 1; string job_type = 2; string config_json = 3; int32 attempt = 4; int32 max_retries = 5; string lease_token = 6; }
+message JobLease { string job_id = 1; string worker_id = 2; string lease_token = 3; }
+message Artifact { string name = 1; string uri = 2; string sha256 = 3; }
+message CompleteJobRequest { JobLease lease = 1; repeated Artifact artifacts = 2; string result_json = 3; }
+message FailJobRequest { JobLease lease = 1; string error_code = 2; string error_message = 3; }
+message CancelJobRequest { string job_id = 1; }
+message GetJobStatusRequest { string job_id = 1; }
+message JobStatus { string job_id = 1; string status = 2; int32 attempt = 3; string error = 4; }
