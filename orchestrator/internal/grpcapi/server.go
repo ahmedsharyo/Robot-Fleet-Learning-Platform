@@ -156,7 +156,7 @@ func (s *Server) request(w http.ResponseWriter, r *http.Request) {
 	}
 	j, e := s.Store.LeaseNext(r.Context(), in.WorkerID, in.Capabilities, s.Lease)
 	if e != nil {
-		http.NoContent(w)
+		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 	writeJSON(w, 200, j)
